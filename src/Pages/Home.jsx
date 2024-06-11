@@ -1,35 +1,84 @@
 import { useState, useEffect, useRef } from "react"
 import logo from "../assets/logo.png"
+import { toast, ToastContainer } from "react-toastify"
+import "react-toastify/ReactToastify.css"
+import axios from "axios"
 
 export default function Home() {
   const Email = useRef()
-  console.log(Email)
-  const handlerSubmit = () => {
+
+  const ToastHandler = (ErrMsg, color) => {
+    toast(ErrMsg, {
+      position: "bottom-center",
+      autoClose: 3000,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      hideProgressBar: false,
+      bodyStyle: {
+        color: color,
+      },
+      progressStyle: {
+        background: "#0A1A3D",
+      },
+    })
+  }
+
+  const handlerSubmit = (e) => {
+    //form validation
+    e.preventDefault()
     if (Email.current.value === "") {
       Email.current.focus()
       return
     }
+    if (!Email.current.value.includes("@gmail.com")) {
+      ToastHandler("Please enter a valid Email Adress", "red")
+      return
+    }
+
+    //handler email sending
+    let data = new FormData()
+    data.append("email", Email.current.value)
+
+    axios
+      .post("http://localhost/challenge/index.php", data, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      })
+      .then((Resp) => {
+        if (Resp) {
+          ToastHandler("Sabscribed Succesfully", "Green")
+          console.log(Resp.data)
+        }
+      })
+      .catch((e) => ToastHandler(`Error: ${e.message}. Try Again.`))
   }
+
   return (
     <>
+      <ToastContainer />
       <div className="w-full h-screen bg-[#0A1A3D] flex flex-col p-5 justify-between">
         <div className="w-full md:flex md:justify-between md:flex-row max-w-4xl mx-auto justify-center gap-4 items-center flex flex-col">
           <div className="font-bold text-lg">
             <img src={logo} alt="logo Icon" className="w-52" />
           </div>
           <div className="flex items-center gap-4">
-            <input
-              type="email"
-              placeholder="Enter Your Email"
-              className="rounded-sm px-2 py-1 text-sm outline-1 outline-blue-500 duration-100"
-              ref={Email}
-            />
-            <button
-              onClick={handlerSubmit}
-              className="bg-[#1B47A4] px-2 py-1 rounded-sm text-white"
-            >
-              Subscribe
-            </button>
+            <form>
+              <input
+                type="email"
+                placeholder="Enter Your Email"
+                className="rounded-sm px-2 py-1 text-sm outline-1 outline-blue-500 duration-100"
+                ref={Email}
+              />
+              <button
+                type="submit"
+                onClick={handlerSubmit}
+                className="bg-[#1B47A4] px-2 py-1 rounded-sm text-sm text-white hover:bg-[#1B47A4]/50"
+              >
+                Subscribe
+              </button>
+            </form>
           </div>
         </div>
         <div className=" w-full flex items-center max-w-4xl mx-auto">
