@@ -43,19 +43,24 @@ export default function Home() {
     axios
       .post("http://localhost/challenge/index.php", data)
       .then((Resp) => {
-        switch (Resp.data) {
+        console.log(Resp.data)
+        switch (Resp.data.response) {
           case "Invalid":
             ToastHandler("Your Email is Invalid", "red")
             break
+
           case "Exist":
             ToastHandler("You are curently registed to this email", "#B8860B")
             break
+
           case "Error":
             ToastHandler("There was an error please try again", "green")
+
             break
           case "Success":
             ToastHandler("Subscried successfully", "green")
             break
+
           default:
             ToastHandler("There was an error please try again", "#B8860B")
         }
@@ -95,7 +100,7 @@ export default function Home() {
               <h1 className="text-4xl">Today’s Challenge</h1>
             </div>
             <div>
-              <p className="text-sm text-gray-400 text-center">
+              <p className="text-sm text-gray-400 text-justify">
                 Your task is to design and implement a captivating download
                 button animation using HTML, CSS, and JavaScript. This animation
                 should not only provide visual feedback to users upon
@@ -108,8 +113,9 @@ export default function Home() {
                 interactions, and loading indicators to signify the progress of
                 the download.
               </p>
+              <p className="text-white/50 mt-4 text-sm">8hours ago</p>
             </div>
-            <div className="flex gap-4 items-center justify-center">
+            <div className="flex gap-4 items-center ">
               <a
                 href="https://codepen.io/Toussaint-Coder/pen/BaeZvVR"
                 target="_blank"
