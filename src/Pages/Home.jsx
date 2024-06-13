@@ -41,18 +41,26 @@ export default function Home() {
     data.append("email", Email.current.value)
 
     axios
-      .post("http://localhost/challenge/index.php", data, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      })
+      .post("http://localhost/challenge/index.php", data)
       .then((Resp) => {
-        if (Resp) {
-          ToastHandler("Sabscribed Succesfully", "Green")
-          console.log(Resp.data)
+        switch (Resp.data) {
+          case "Invalid":
+            ToastHandler("Your Email is Invalid", "red")
+            break
+          case "Exist":
+            ToastHandler("You are curently registed to this email", "#B8860B")
+            break
+          case "Error":
+            ToastHandler("There was an error please try again", "green")
+            break
+          case "Success":
+            ToastHandler("Subscried successfully", "green")
+            break
+          default:
+            ToastHandler("There was an error please try again", "#B8860B")
         }
       })
-      .catch((e) => ToastHandler(`Error: ${e.message}. Try Again.`))
+      .catch((e) => ToastHandler(`${e.message}`))
   }
 
   return (
@@ -64,7 +72,7 @@ export default function Home() {
             <img src={logo} alt="logo Icon" className="w-52" />
           </div>
           <div className="flex items-center gap-4">
-            <form>
+            <form className="flex items-center gap-4">
               <input
                 type="email"
                 placeholder="Enter Your Email"
