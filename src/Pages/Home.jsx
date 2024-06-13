@@ -55,8 +55,8 @@ export default function Home() {
 
           case "Error":
             ToastHandler("There was an error please try again", "green")
-
             break
+
           case "Success":
             ToastHandler("Subscried successfully", "green")
             break
