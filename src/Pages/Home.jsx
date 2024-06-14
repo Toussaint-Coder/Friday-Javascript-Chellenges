@@ -3,9 +3,11 @@ import logo from "../assets/logo.png"
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/ReactToastify.css"
 import axios from "axios"
+import { Link } from "react-router-dom"
 
 export default function Home() {
   const Email = useRef()
+  const [connected, setConnected] = useState(0)
 
   const ToastHandler = (ErrMsg, color) => {
     toast(ErrMsg, {
@@ -42,6 +44,7 @@ export default function Home() {
 
     axios
       .post("http://localhost/challenge/index.php", data)
+
       .then((Resp) => {
         console.log(Resp.data)
         switch (Resp.data.response) {
@@ -68,14 +71,23 @@ export default function Home() {
       .catch((e) => ToastHandler(`${e.message}`))
   }
 
+  useEffect(() => {
+    setInterval(() => {
+      const RandomUsers = Math.floor(Math.random() * 801) + 300
+      setConnected(RandomUsers)
+    }, 2000)
+  }, [])
   return (
     <>
       <ToastContainer />
       <div className="w-full h-screen bg-[#0A1A3D] flex flex-col p-5 justify-between">
         <div className="w-full md:flex md:justify-between md:flex-row max-w-4xl mx-auto justify-center gap-4 items-center flex flex-col">
           <div className="font-bold text-lg">
-            <img src={logo} alt="logo Icon" className="w-52" />
+            <Link to="/">
+              <img src={logo} alt="logo Icon" className="w-52" />
+            </Link>
           </div>
+
           <div className="flex items-center gap-4">
             <form className="flex items-center gap-4">
               <input
@@ -96,11 +108,11 @@ export default function Home() {
         </div>
         <div className=" w-full flex items-center max-w-4xl mx-auto">
           <div className="flex flex-col gap-4">
-            <div className="font-bold text-white text-center">
+            <div className="font-bold text-white">
               <h1 className="text-4xl">Today’s Challenge</h1>
             </div>
             <div>
-              <p className="text-sm text-gray-400 text-justify">
+              <p className="text-sm text-gray-400">
                 Your task is to design and implement a captivating download
                 button animation using HTML, CSS, and JavaScript. This animation
                 should not only provide visual feedback to users upon
@@ -113,7 +125,9 @@ export default function Home() {
                 interactions, and loading indicators to signify the progress of
                 the download.
               </p>
-              <p className="text-white/50 mt-4 text-sm">8hours ago</p>
+              <p className="text-white/50 mt-4 text-xs text-end">
+                Published 8hours ago
+              </p>
             </div>
             <div className="flex gap-4 items-center ">
               <a
@@ -124,6 +138,9 @@ export default function Home() {
                   View Demo
                 </button>
               </a>
+              <div>
+                <p className="text-green-500">{connected} Connected</p>
+              </div>
             </div>
           </div>
         </div>
